@@ -1,34 +1,35 @@
 /**
- * Well known colors for ZIP-LEDs
- */
-enum ZipLedColors {
-    //% block=red
-    Red = 0xFF0000,
-    //% block=orange
-    Orange = 0xFFA500,
-    //% block=yellow
-    Yellow = 0xFFFF00,
-    //% block=green
-    Green = 0x00FF00,
-    //% block=blue
-    Blue = 0x0000FF,
-    //% block=indigo
-    Indigo = 0x4b0082,
-    //% block=violet
-    Violet = 0x8a2be2,
-    //% block=purple
-    Purple = 0xFF00FF,
-    //% block=white
-    White = 0xFFFFFF,
-    //% block=black
-    Black = 0x000000
-}
-/**
  * Blocks for driving the Kitronik Klip Motor Board
  */
 //% weight=100 color=#00A654 icon="\uf0c6" block="Klip Motor"
-//% groups='["Motors", "ZIP-LEDs"]'
+//% groups='["Motors", "ZIP LEDs"]'
 namespace kitronik_klip_motor {
+	/**
+	 * Well known colors for ZIP LEDs
+	 */
+	enum ZipLedColors {
+	    //% block=red
+	    Red = 0xFF0000,
+	    //% block=orange
+	    Orange = 0xFFA500,
+	    //% block=yellow
+	    Yellow = 0xFFFF00,
+	    //% block=green
+	    Green = 0x00FF00,
+	    //% block=blue
+	    Blue = 0x0000FF,
+	    //% block=indigo
+	    Indigo = 0x4b0082,
+	    //% block=violet
+	    Violet = 0x8a2be2,
+	    //% block=purple
+	    Purple = 0xFF00FF,
+	    //% block=white
+	    White = 0xFFFFFF,
+	    //% block=black
+	    Black = 0x000000
+	}
+
     /*Note that Forward and reverse are slightly arbitrary, as it depends on how the motor is wired...*/
     /**
      * Different directions for motors to turn
@@ -76,22 +77,35 @@ namespace kitronik_klip_motor {
         SuperBright = 255
     }
 
+    /**
+     * ZIP LED Hue Interpolation direction options
+     */
+    export enum HueInterpolationDirection {
+        //% block="Clockwise"
+        Clockwise,
+        //% block="CounterClockwise"
+        CounterClockwise,
+        //% block="Shortest"
+        Shortest
+    }
+
 	/**
      * Turns on motor in the direction specified at the requested speed 
 	 * @param motor which motor to turn on
 	 * @param dir   which direction to go
 	 * @param speed how fast to spin the motor
      */
-    //% group=Motors
+    //% group="Motors"
     //% blockId=kitronik_klip_motor_motor_on
     //% block="turn %motor|%dir|at speed %speed"
+    //% weight=100 blockGap=8
     //% speed.min=0 speed.max=100
     export function motorOn(motor: Motors, dir: MotorDirection, speed: number): void {
         /*first convert 0-100 to 0-1024 (approx) We wont worry about the lsat 24 to make life simpler*/
         let OutputVal = Math.clamp(0, 100, speed) * 10;
 
         switch (motor) {
-            case Motors.Motor1: /*Motor 1 uses Pins 15 (was 13) and 16 (was 15)*/
+            case Motors.Motor1: /*Motor 1 uses Pins 15 and 16*/
                 switch (dir) {
                     case MotorDirection.Forward:
                         pins.analogWritePin(AnalogPin.P15, OutputVal);
@@ -104,7 +118,7 @@ namespace kitronik_klip_motor {
                 }
 
                 break;
-            case Motors.Motor2: /*Motor 2 uses Pins 13 (was 12) and 14 (was 16)*/
+            case Motors.Motor2: /*Motor 2 uses Pins 13 and 14*/
                 switch (dir) {
                     case MotorDirection.Forward:
                         pins.analogWritePin(AnalogPin.P13, OutputVal);
@@ -123,9 +137,10 @@ namespace kitronik_klip_motor {
      * Turns off the specified motor
      * @param motor which motor to turn off
      */
-    //% group=Motors
+    //% group="Motors"
     //% blockId=kitronik_klip_motor_motor_off
     //%block="turn off %motor"
+    //% weight=99 blockGap=8
     export function motorOff(motor: Motors): void {
         switch (motor) {
             case Motors.Motor1:
@@ -153,7 +168,7 @@ namespace kitronik_klip_motor {
         /**
          * Shows a rainbow pattern on all ZIP LEDs.
          */
-        //% group=ZIP-LEDs
+        //% group="ZIP LEDs"
         //% blockId="kitronik_klip_motor_zip_rainbow" block="%prettyLights|show rainbow" 
         //% weight=94 blockGap=8
         //% parts="neopixel"
@@ -220,9 +235,9 @@ namespace kitronik_klip_motor {
          * Rotate LEDs forward.
          * @param offset number of ZIP LEDs to rotate forward, eg: 1
          */
-        //% group=ZIP-LEDs
-        //% blockId="kitronik_klip_motor_zip_rotate" block="%prettyLights|rotate ZIP LEDs by %offset" blockGap=8
-        //% weight=93
+        //% group="ZIP LEDs"
+        //% blockId="kitronik_klip_motor_zip_rotate" block="%prettyLights|rotate ZIP LEDs by %offset"
+        //% weight=93 blockGap=8
         //% parts="neopixel"
         rotate(offset: number = 1): void {
             const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
@@ -234,7 +249,7 @@ namespace kitronik_klip_motor {
          * Shows all ZIP LEDs display as a given color. 
          * @param rgb RGB color of the LED
          */
-        //% group=ZIP-LEDs
+        //% group="ZIP LEDs"
         //% blockId="kitronik_klip_motor_zip_string_color" block="%prettyLights|show color %rgb=colorNumberPicker2" 
         //% weight=99 blockGap=8
         //% parts="neopixel"
@@ -250,6 +265,7 @@ namespace kitronik_klip_motor {
          * @param zipLedNum position of the ZIP LED in the string
          * @param rgb RGB color of the ZIP LED
          */
+        //% group="ZIP LEDs"
         //% blockId="kitronik_klip_motor_set_zip_color" block="%prettyLights|set ZIP LED %zipLedNum|to %rgb=colorNumberPicker2" 
         //% weight=80 blockGap=8
         //% parts="neopixel"
@@ -260,9 +276,9 @@ namespace kitronik_klip_motor {
         /**
          * Send all the changes to the ZIP LEDs.
          */
-        //% group=ZIP-LEDs
-        //% blockId="kitronik_klip_motor_zip_show" block="%prettyLights|show changes" blockGap=8
-        //% weight=96
+        //% group="ZIP LEDs"
+        //% blockId="kitronik_klip_motor_zip_show" block="%prettyLights|show changes"
+        //% weight=96 blockGap=8
         //% parts="neopixel"
         show() {
             ws2812b.sendBuffer(this.buf, this.pin);
@@ -271,9 +287,9 @@ namespace kitronik_klip_motor {
         /**
          * Turn off all LEDs on the ZIP LED string.
          */
-        //% group=ZIP-LEDs
+        //% group="ZIP LEDs"
         //% blockId="kitronik_klip_motor_zip_clear" block="%prettyLights|turn all ZIP LEDs off"
-        //% weight=95
+        //% weight=95 blockGap=8
         //% parts="neopixel"
         clear(): void {
             const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
@@ -283,11 +299,11 @@ namespace kitronik_klip_motor {
 
         /**
          * Set the brightness of the ZIP LEDs. Applies to future changes.
-         * @param brightness a measure of LED brightness in 0-255. eg: 255
+         * @param brightness a measure of LED brightness in 0-255.
          */
-        //% group=ZIP-LEDs
-        //% blockId="kitronik_klip_motor_zip_brightness" block="%prettyLights|set brightness to %brightness" blockGap=8
-        //% weight=92
+        //% group="ZIP LEDs"
+        //% blockId="kitronik_klip_motor_zip_brightness" block="%prettyLights|set brightness to %brightness"
+        //% weight=92 blockGap=8
         //% parts="neopixel"
         setBrightness(brightness: ZipLedBrightness): void {
             this.brightness = brightness & 0xff;
@@ -391,9 +407,9 @@ namespace kitronik_klip_motor {
 
     /**
      * Create a new ZIP LED driver for a number of attached ZIP LEDs.
-     * @param numleds the number of ZIP-LEDs connected to the Klip Motor board, eg: 5
+     * @param numleds the number of ZIP LEDs connected to the Klip Motor board, eg: 5
      */
-    //% group=ZIP-LEDs
+    //% group="ZIP LEDs"
     //% blockId="kitronik_klip_motor_zip_create" block="string of %numleds|ZIP LEDs"
     //% weight=100 blockGap=8
     //% parts="neopixel"
@@ -426,6 +442,7 @@ namespace kitronik_klip_motor {
 
     /**
      * Gets the RGB value of a known color
+     * @param color is the list of ZIP LED colours in the drop down box
     */
     //% weight=2 blockGap=8
     //% blockId="zip_colors" block="%color"
@@ -502,11 +519,5 @@ namespace kitronik_klip_motor {
         let g = g$ + m;
         let b = b$ + m;
         return packRGB(r, g, b);
-    }
-
-    export enum HueInterpolationDirection {
-        Clockwise,
-        CounterClockwise,
-        Shortest
     }
 }
