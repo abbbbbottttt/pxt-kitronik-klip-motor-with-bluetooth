@@ -310,6 +310,20 @@ namespace kitronik_klip_motor {
         }
 
         /**
+         * Set the brightness of the ZIP LEDs. Applies to future changes.
+         * @param brightnessPercent a measure of LED brightness in 0-255.
+         */
+        //% group="ZIP LEDs"
+        //% blockId="kitronik_klip_motor_zip_brightness_2" block="%prettyLights|set brightness to %brightness"
+        //% weight=5 blockGap=8
+        //% brightnessPercent.min=0 brightnessPercent.max=100
+        //% parts="neopixel"
+        setBrightnessPercent(brightnessPercent: number): void {
+            let brightnessNum = brightnessPercent * 2.55
+            this.brightness = brightnessNum & 0xff;
+        }
+
+        /**
          * Set the pin where the ZIP LED is connected, defaults to P0.
          */
         //% parts="neopixel"
@@ -455,8 +469,10 @@ namespace kitronik_klip_motor {
      * Get the color wheel field editor
      * @param color color, eg: #ff0000
      */
+    //% group="ZIP LEDs"
     //% blockId=colorNumberPicker2 block="%value"
-    //% blockHidden=true
+    //% blockHidden=false
+    //% weight=10 blockGap=8
     //% shim=TD_ID colorSecondary="#ffffff"
     //% value.fieldEditor="colornumber" value.fieldOptions.decompileLiterals=true
     //% value.defl='#ff0000'
