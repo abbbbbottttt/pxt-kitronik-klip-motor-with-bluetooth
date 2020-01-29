@@ -2,7 +2,7 @@
  * Blocks for driving the Kitronik Klip Motor Board
  */
 //% weight=100 color=#00A654 icon="\uf0c6" block="Klip Motor"
-//% groups='["Motors", "ZIP LEDs"]'
+//% groups='["Motors & Servos", "ZIP LEDs"]'
 namespace kitronik_klip_motor {
 	/**
 	 * Well known colors for ZIP LEDs
@@ -52,6 +52,20 @@ namespace kitronik_klip_motor {
     }
 
     /**
+     * Servo pin connection options
+     */
+    export enum Servos {
+        //% block="Pin 0"
+        pin0 = 0,
+        //% block="Pin 1"
+        pin1 = 1,
+        //% block="Pin 2"
+        pin2 = 2,
+        //% block="ZIP Pin"
+        zipPin = 8
+    }
+
+    /**
      * Different modes for RGB or RGB+W ZIP strips
      */
     export enum ZipLedMode {
@@ -95,7 +109,7 @@ namespace kitronik_klip_motor {
 	 * @param dir   which direction to go
 	 * @param speed how fast to spin the motor
      */
-    //% group="Motors"
+    //% group="Motors & Servos"
     //% blockId=kitronik_klip_motor_motor_on
     //% block="turn %motor|%dir|at speed %speed"
     //% weight=100 blockGap=8
@@ -137,7 +151,7 @@ namespace kitronik_klip_motor {
      * Turns off the specified motor
      * @param motor which motor to turn off
      */
-    //% group="Motors"
+    //% group="Motors & Servos"
     //% blockId=kitronik_klip_motor_motor_off
     //%block="turn off %motor"
     //% weight=99 blockGap=8
@@ -150,6 +164,56 @@ namespace kitronik_klip_motor {
             case Motors.Motor2:
                 pins.digitalWritePin(DigitalPin.P13, 0);
                 pins.digitalWritePin(DigitalPin.P14, 0);
+                break
+        }
+    }
+
+    /**
+     * Sets servo connected to Pin 0 to specific angle (for 180 deg servos) or rotation speed (360 deg servos)
+     * @param angle angle/speed for servo to turn to/at eg: 90
+     */
+    //% group="Motors & Servos"
+    //% blockId=kitronik_klip_motor_servo_on
+    //% block="turn servo on %servoPin|to %angle"
+    //% angle.min=0 angle.max=180
+    //% weight=98 blockGap=8
+    export function servoTurn(servo: Servos, angle: number): void {
+        switch (servo) {
+            case 0:
+                pins.servoWritePin(AnalogPin.P0, angle)
+                break
+            case 1:
+                pins.servoWritePin(AnalogPin.P1, angle)
+                break
+            case 2:
+                pins.servoWritePin(AnalogPin.P2, angle)
+                break
+            case 8:
+                pins.servoWritePin(AnalogPin.P8, angle)
+                break
+        }
+    }
+
+    /**
+     * Turns off Servo output
+     */
+    //% group="Motors & Servos"
+    //% blockId=kitronik_klip_motor_servo_off
+    //% block="turn off servo on %servo"
+    //% weight=97 blockGap=8
+    export function allOff(servo: Servos): void {
+        switch (servo) {
+            case 0:
+                pins.digitalWritePin(DigitalPin.P0, 0)
+                break
+            case 1:
+                pins.digitalWritePin(DigitalPin.P1, 0)
+                break
+            case 2:
+                pins.digitalWritePin(DigitalPin.P2, 0)
+                break
+            case 8:
+                pins.digitalWritePin(DigitalPin.P8, 0)
                 break
         }
     }
