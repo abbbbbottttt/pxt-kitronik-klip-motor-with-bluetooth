@@ -178,20 +178,22 @@ namespace kitronik_klip_motor {
     //% angle.min=0 angle.max=180
     //% weight=98 blockGap=8
     export function servoTurn(servo: Servos, angle: number): void {
+        let currentServo = 0
         switch (servo) {
             case 0:
-                pins.servoWritePin(AnalogPin.P0, angle)
+                currentServo = AnalogPin.P0
                 break
             case 1:
-                pins.servoWritePin(AnalogPin.P1, angle)
+                currentServo = AnalogPin.P1
                 break
             case 2:
-                pins.servoWritePin(AnalogPin.P2, angle)
+                currentServo = AnalogPin.P2
                 break
             case 8:
-                pins.servoWritePin(AnalogPin.P8, angle)
+                currentServo = AnalogPin.P8
                 break
         }
+        pins.servoWritePin(currentServo, angle)
     }
 
     /**
