@@ -1,11 +1,10 @@
 {
-    "name": "pxt-kitronik-klip-motor",
+    "name": "pxt-kitronik-klip-motor-with-bluetooth",
     "version": "1.1.2",
     "description": "Blocks for driving the Kitronik Klip Motor Board",
     "license": "MIT",
     "dependencies": {
-        "core": "*",
-        "ws2812b": "github:Microsoft/pxt-ws2812b#v0.0.4"
+        "core": "*"
     },
     "files": [
         "README.md",
@@ -19,13 +18,5 @@
         "microbit"
     ],
     "preferredEditor": "tsprj",
-    "yotta": {
-        "config": {
-            "microbit-dal": {
-                "bluetooth": {
-                    "enabled": 0
-                }
-            }
-        }
-    }
+    "installedVersion": "workspace:357ccc09-53c1-4c30-fa77-f73d966b8d9e"
 }
