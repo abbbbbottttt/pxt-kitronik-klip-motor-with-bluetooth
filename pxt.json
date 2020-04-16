@@ -1,6 +1,6 @@
 {
     "name": "pxt-kitronik-klip-motor-with-bluetooth",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "description": "Blocks for driving the Kitronik Klip Motor Board",
     "license": "MIT",
     "dependencies": {
